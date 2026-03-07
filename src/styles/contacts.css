@@ -1,0 +1,130 @@
+/* === Contacts Screen === */
+.contacts-screen {
+    padding-bottom: var(--space-lg);
+}
+
+.contacts-list {
+    padding: 0 var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    animation: fade-in 0.3s ease;
+}
+
+.contact-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--police-blue), #5856d6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-lg);
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.contact-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-info h4 {
+    font-size: var(--font-base);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-info p {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.contact-info .contact-relation {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+}
+
+.contact-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.contact-action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.contact-action-btn.call {
+    background: rgba(52, 199, 89, 0.15);
+    color: var(--medical-green);
+}
+
+.contact-action-btn.sms {
+    background: rgba(0, 122, 255, 0.15);
+    color: var(--police-blue);
+}
+
+.contact-action-btn.delete {
+    background: rgba(255, 45, 85, 0.1);
+    color: var(--sos-red);
+}
+
+.contact-action-btn:active {
+    transform: scale(0.85);
+}
+
+/* Add Contact Button */
+.add-contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: calc(100% - var(--space-md) * 2);
+    margin: var(--space-md) auto 0;
+    padding: var(--space-md);
+    background: var(--bg-card);
+    border: 2px dashed var(--border-light);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.add-contact-btn:active {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--sos-red);
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.contact-form .btn-primary {
+    width: 100%;
+    margin-top: var(--space-sm);
+}

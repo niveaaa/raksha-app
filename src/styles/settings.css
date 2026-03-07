@@ -1,0 +1,197 @@
+/* === Settings Screen === */
+.settings-screen {
+    padding-bottom: var(--space-lg);
+}
+
+.settings-sections {
+    padding: 0 var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.settings-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.settings-section-title {
+    padding: var(--space-md) var(--space-md) var(--space-sm);
+    font-size: var(--font-xs);
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-top: 1px solid var(--border-color);
+    transition: background var(--transition-fast);
+}
+
+.setting-item:first-child {
+    border-top: none;
+}
+
+.setting-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.setting-icon.red {
+    background: rgba(255, 45, 85, 0.15);
+}
+
+.setting-icon.blue {
+    background: rgba(0, 122, 255, 0.15);
+}
+
+.setting-icon.green {
+    background: rgba(52, 199, 89, 0.15);
+}
+
+.setting-icon.orange {
+    background: rgba(255, 149, 0, 0.15);
+}
+
+.setting-icon.purple {
+    background: rgba(175, 82, 222, 0.15);
+}
+
+.setting-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.setting-info h4 {
+    font-size: var(--font-sm);
+    font-weight: 600;
+}
+
+.setting-info p {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 48px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-light);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    transition: all var(--transition-normal);
+}
+
+.toggle-switch input:checked+.toggle-slider {
+    background: rgba(52, 199, 89, 0.2);
+    border-color: var(--medical-green);
+}
+
+.toggle-switch input:checked+.toggle-slider::before {
+    transform: translateX(20px);
+    background: var(--medical-green);
+}
+
+/* API Key Input */
+.api-key-input-group {
+    padding: 0 var(--space-md) var(--space-md);
+}
+
+.api-key-input-group .form-input {
+    font-family: 'Courier New', monospace;
+    font-size: var(--font-xs);
+}
+
+/* Message Template */
+.message-template-group {
+    padding: 0 var(--space-md) var(--space-md);
+}
+
+.message-template-group textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: var(--space-md);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: var(--font-xs);
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+}
+
+.message-template-group textarea:focus {
+    border-color: var(--sos-red);
+}
+
+/* About Section */
+.about-section {
+    text-align: center;
+    padding: var(--space-xl) var(--space-md);
+}
+
+.about-section .app-logo {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.about-section h3 {
+    font-size: var(--font-lg);
+    font-weight: 800;
+}
+
+.about-section .app-version {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+.about-section .app-tagline {
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+    margin-top: var(--space-sm);
+    max-width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+}

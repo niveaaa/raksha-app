@@ -1,0 +1,254 @@
+/* === Home Screen === */
+.home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--nav-height));
+    min-height: calc(100dvh - var(--nav-height));
+    padding: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Effects */
+.home-screen::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 45, 85, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.home-title {
+    font-size: var(--font-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--space-xl);
+    text-align: center;
+}
+
+/* === Radial Menu Container === */
+.radial-container {
+    position: relative;
+    width: 320px;
+    height: 320px;
+}
+
+/* === SOS Center Button === */
+.sos-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff2d55 0%, #cc0033 100%);
+    color: white;
+    font-size: var(--font-2xl);
+    font-weight: 900;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    animation: pulse-glow 2.5s ease-in-out infinite;
+    transition: transform var(--transition-fast);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.sos-btn:active {
+    transform: translate(-50%, -50%) scale(0.92);
+}
+
+/* Ripple rings behind SOS */
+.sos-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 45, 85, 0.15);
+    pointer-events: none;
+}
+
+.sos-ring-1 {
+    width: 140px;
+    height: 140px;
+}
+
+.sos-ring-2 {
+    width: 175px;
+    height: 175px;
+    opacity: 0.7;
+}
+
+.sos-ring-3 {
+    width: 210px;
+    height: 210px;
+    opacity: 0.4;
+}
+
+/* === Radial Buttons === */
+.radial-btn {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    border: 1px solid var(--border-light);
+    z-index: 4;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.radial-btn:active {
+    transform: scale(0.88);
+}
+
+.radial-btn .radial-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.radial-btn .radial-label {
+    font-size: 0.5rem;
+    font-weight: 600;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Radial button themes */
+.radial-btn.police {
+    background: rgba(0, 122, 255, 0.2);
+    border-color: rgba(0, 122, 255, 0.4);
+    box-shadow: 0 0 16px var(--police-blue-glow);
+}
+
+.radial-btn.medical {
+    background: rgba(52, 199, 89, 0.2);
+    border-color: rgba(52, 199, 89, 0.4);
+    box-shadow: 0 0 16px var(--medical-green-glow);
+}
+
+.radial-btn.fire {
+    background: rgba(255, 149, 0, 0.2);
+    border-color: rgba(255, 149, 0, 0.4);
+    box-shadow: 0 0 16px var(--fire-orange-glow);
+}
+
+.radial-btn.women {
+    background: rgba(175, 82, 222, 0.2);
+    border-color: rgba(175, 82, 222, 0.4);
+    box-shadow: 0 0 16px var(--women-purple-glow);
+}
+
+.radial-btn.child {
+    background: rgba(255, 107, 157, 0.2);
+    border-color: rgba(255, 107, 157, 0.4);
+    box-shadow: 0 0 16px var(--child-pink-glow);
+}
+
+.radial-btn.elderly {
+    background: rgba(90, 200, 250, 0.2);
+    border-color: rgba(90, 200, 250, 0.4);
+    box-shadow: 0 0 16px var(--elderly-teal-glow);
+}
+
+.radial-btn.railway {
+    background: rgba(255, 214, 10, 0.2);
+    border-color: rgba(255, 214, 10, 0.4);
+    box-shadow: 0 0 16px var(--railway-yellow-glow);
+}
+
+.radial-btn.disaster {
+    background: rgba(100, 210, 255, 0.2);
+    border-color: rgba(100, 210, 255, 0.4);
+    box-shadow: 0 0 16px var(--disaster-cyan-glow);
+}
+
+.radial-btn.police:active {
+    background: rgba(0, 122, 255, 0.4);
+}
+
+.radial-btn.medical:active {
+    background: rgba(52, 199, 89, 0.4);
+}
+
+.radial-btn.fire:active {
+    background: rgba(255, 149, 0, 0.4);
+}
+
+.radial-btn.women:active {
+    background: rgba(175, 82, 222, 0.4);
+}
+
+.radial-btn.child:active {
+    background: rgba(255, 107, 157, 0.4);
+}
+
+.radial-btn.elderly:active {
+    background: rgba(90, 200, 250, 0.4);
+}
+
+.radial-btn.railway:active {
+    background: rgba(255, 214, 10, 0.4);
+}
+
+.radial-btn.disaster:active {
+    background: rgba(100, 210, 255, 0.4);
+}
+
+/* Radial buttons are positioned via inline styles from JS */
+
+/* === Status Bar === */
+.home-status {
+    margin-top: var(--space-xl);
+    text-align: center;
+}
+
+.home-status .status-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--medical-green);
+    animation: pulse-glow 2s ease infinite;
+    box-shadow: 0 0 8px var(--medical-green-glow);
+}
+
+.status-dot.no-location {
+    background: var(--fire-orange);
+    box-shadow: 0 0 8px var(--fire-orange-glow);
+}

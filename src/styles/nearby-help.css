@@ -1,0 +1,170 @@
+/* === Nearby Help Screen === */
+.nearby-screen {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - var(--nav-height));
+    height: calc(100dvh - var(--nav-height));
+}
+
+/* Category Filters */
+.nearby-filters {
+    display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 10;
+}
+
+.nearby-filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: var(--font-xs);
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+}
+
+.filter-chip.active {
+    background: rgba(255, 45, 85, 0.15);
+    border-color: var(--sos-red);
+    color: var(--sos-red);
+}
+
+.filter-chip:active {
+    transform: scale(0.95);
+}
+
+/* Map Container */
+.nearby-map {
+    flex: 1;
+    position: relative;
+}
+
+.nearby-map #map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Leaflet popup customization */
+.leaflet-popup-content-wrapper {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.leaflet-popup-tip {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.leaflet-popup-close-button {
+    color: var(--text-muted) !important;
+}
+
+.popup-content {
+    padding: var(--space-xs);
+    min-width: 180px;
+}
+
+.popup-content h4 {
+    font-size: var(--font-sm);
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+}
+
+.popup-content .popup-type {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.popup-content .popup-distance {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.popup-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.popup-actions button {
+    flex: 1;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xs);
+    font-weight: 600;
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.popup-actions .navigate-btn {
+    background: var(--police-blue);
+    color: white;
+}
+
+.popup-actions .call-btn {
+    background: var(--medical-green);
+    color: white;
+}
+
+/* My Location Button */
+.my-location-btn {
+    position: absolute;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+}
+
+.my-location-btn:active {
+    transform: scale(0.9);
+    background: var(--bg-card);
+}
+
+/* Loading overlay for map */
+.map-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    z-index: 5;
+    gap: var(--space-md);
+}
+
+.map-loading p {
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+}
