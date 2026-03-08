@@ -35,6 +35,24 @@ export function render() {
           </div>
         </div>
 
+        <!-- Appearance -->
+        <div class="settings-section">
+          <div class="settings-section-title">Appearance</div>
+          <div class="setting-item">
+            <div class="setting-icon ${settings.theme === 'dark' ? 'purple' : 'orange'}">
+              ${settings.theme === 'dark' ? '🌙' : '☀️'}
+            </div>
+            <div class="setting-info">
+              <h4>Theme</h4>
+              <p>${settings.theme === 'dark' ? 'Dark mode' : 'Light mode'}</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="theme-toggle" ${settings.theme === 'light' ? 'checked' : ''} />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
         <!-- Safety Features -->
         <div class="settings-section">
           <div class="settings-section-title">Safety Features</div>
@@ -127,6 +145,23 @@ export function mount() {
       }
     });
   });
+
+  // Theme toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('change', () => {
+      const newTheme = themeToggle.checked ? 'light' : 'dark';
+      updateSetting('theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+      showToast(newTheme === 'dark' ? '🌙 Dark mode' : '☀️ Light mode');
+      // Refresh screen to update icon/label
+      const container = document.getElementById('screen-container');
+      if (container) {
+        container.innerHTML = render();
+        mount();
+      }
+    });
+  }
 
   // Shake toggle
   const shakeToggle = document.getElementById('shake-toggle');

@@ -1,6 +1,7 @@
 // Nearby Help Screen - Leaflet Map with Overpass API
 
 import { getCurrentPosition, calculateDistance, getNavigationLink } from '../services/location.js';
+import { getSettings } from '../services/storage.js';
 
 const CATEGORIES = [
     { id: 'all', label: '📍 All', query: '' },
@@ -75,8 +76,10 @@ function initMap() {
         attributionControl: false
     }).setView([20.5937, 78.9629], 5);
 
-    // Dark map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Theme-aware map tiles
+    const settings = getSettings();
+    const tileStyle = settings.theme === 'light' ? 'light_all' : 'dark_all';
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`, {
         maxZoom: 19,
     }).addTo(map);
 

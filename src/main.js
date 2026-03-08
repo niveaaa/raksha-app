@@ -76,6 +76,12 @@ function init() {
     // Listen for hash changes
     window.addEventListener('hashchange', handleRoute);
 
+    // Apply saved theme
+    const appSettings = getSettings();
+    if (appSettings.theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+
     // Initial route
     handleRoute();
 

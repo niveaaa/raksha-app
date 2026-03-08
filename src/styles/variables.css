@@ -82,3 +82,22 @@
   --nav-height: 72px;
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+/* === Light Mode === */
+[data-theme="light"] {
+  --bg-primary: #f2f2f7;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #e8e8f0;
+
+  --text-primary: #1a1a2e;
+  --text-secondary: #6b6b80;
+  --text-muted: #9999aa;
+
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-light: rgba(0, 0, 0, 0.12);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
