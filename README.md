@@ -1,0 +1,88 @@
+# 🆘 Raksha - SOS Emergency PWA
+
+A Progressive Web App for emergency situations in India. Features an SOS radial dashboard, AI-powered emergency assistant, nearby help map, and emergency contact alerts.
+
+## Features
+
+- **SOS Radial Dashboard** — 8 emergency buttons (Police, Medical, Fire, Women Safety, Child, Elderly, Railway, Disaster) with direct call & SMS
+- **AI Emergency Assistant** — Powered by Groq (Llama 3.3 70B) with voice input & text-to-speech
+- **Nearby Help Map** — Find hospitals, police stations, pharmacies & fire stations using Leaflet + OpenStreetMap
+- **Emergency Contacts** — Add trusted contacts who receive SMS alerts with your GPS location
+- **Shake to SOS** — Shake your phone 3 times to trigger emergency alerts
+- **Hindi Support** — Full Hindi/English toggle for AI responses, voice input & TTS
+- **Dark/Light Mode** — Theme toggle with matching map tiles
+- **Offline Ready** — PWA with service worker caching
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Vite + Vanilla JavaScript |
+| AI | Groq API (Llama 3.3 70B) |
+| TTS | ElevenLabs API (George voice) |
+| Voice Input | Web Speech API |
+| Maps | Leaflet + OpenStreetMap + Overpass API |
+| Storage | localStorage |
+| PWA | Service Worker + Web App Manifest |
+
+## Setup
+
+```bash
+# Clone
+git clone https://github.com/niveaaa/raksha-app.git
+cd raksha-app
+
+# Install
+npm install
+
+# Configure API keys
+cp .env.example .env
+# Edit .env with your keys:
+#   VITE_GROQ_API_KEY=your_groq_key
+#   VITE_ELEVENLABS_API_KEY=your_elevenlabs_key
+
+# Run
+npm run dev
+```
+
+### API Keys
+
+| Service | Get Key | Required |
+|---|---|---|
+| Groq | [console.groq.com/keys](https://console.groq.com/keys) | Yes (for AI chat) |
+| ElevenLabs | [elevenlabs.io](https://elevenlabs.io) | Optional (falls back to browser TTS) |
+
+## Indian Emergency Numbers
+
+| Service | Number |
+|---|---|
+| Police | 100 |
+| Ambulance | 108 |
+| Fire | 101 |
+| Women Helpline | 1091 |
+| Child Helpline | 1098 |
+| Universal Emergency | 112 |
+
+## Project Structure
+
+```
+src/
+├── main.js              # Router + initialization
+├── screens/
+│   ├── home.js          # SOS radial dashboard
+│   ├── ai-assistant.js  # AI chat + voice + TTS
+│   ├── nearby-help.js   # Leaflet map
+│   ├── contacts.js      # Emergency contacts
+│   └── settings.js      # App settings
+├── services/
+│   ├── gemini.js        # Groq API client
+│   ├── location.js      # GPS + navigation
+│   ├── sms.js           # SMS alerts
+│   ├── storage.js       # localStorage helpers
+│   └── shake-detector.js
+└── styles/              # Component CSS files
+```
+
+## License
+
+MIT
