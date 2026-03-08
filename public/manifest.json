@@ -1,6 +1,6 @@
 {
-    "name": "SOS Emergency",
-    "short_name": "SOS",
+    "name": "Raksha - SOS",
+    "short_name": "Raksha",
     "description": "Your personal safety companion - Emergency SOS, AI assistance, and nearby help.",
     "start_url": "/",
     "display": "standalone",
