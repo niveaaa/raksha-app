@@ -1,8 +1,10 @@
 // Groq AI Service (OpenAI-compatible API)
 
+import { getSettings } from './storage.js';
+
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-const SYSTEM_PROMPT = `You are an Emergency AI Assistant built into an SOS safety app used in India. Your role is to help users during emergency situations. 
+const SYSTEM_PROMPT_EN = `You are an Emergency AI Assistant built into an SOS safety app used in India. Your role is to help users during emergency situations. 
 
 IMPORTANT GUIDELINES:
 - Be calm, clear, and reassuring
@@ -26,6 +28,30 @@ Indian Emergency Numbers you can reference:
 
 Start by asking what kind of emergency the user is facing if they haven't specified.`;
 
+const SYSTEM_PROMPT_HI = `आप एक इमरजेंसी AI असिस्टेंट हैं जो भारत में एक SOS सेफ्टी ऐप में बना है। आपका काम इमरजेंसी सिचुएशन में यूजर्स की मदद करना है।
+
+महत्वपूर्ण दिशानिर्देश:
+- शांत, स्पष्ट और भरोसेमंद रहें
+- स्थिति समझने के लिए छोटे, सीधे सवाल पूछें
+- कदम-दर-कदम कार्रवाई योग्य मार्गदर्शन दें
+- मेडिकल इमरजेंसी: प्राथमिक चिकित्सा निर्देश दें (CPR, खून रोकना, जलना आदि)
+- आग की इमरजेंसी: निकासी और सुरक्षा कदम बताएं
+- अपराध/सुरक्षा: सुरक्षा टिप्स दें और अधिकारियों को क्या बताना है बताएं
+- हमेशा इमरजेंसी सेवाओं को कॉल करने की सलाह दें
+- जवाब संक्षिप्त रखें - यह इमरजेंसी है, हर सेकंड महत्वपूर्ण है
+- सरल हिंदी भाषा का उपयोग करें
+- हमेशा हिंदी में जवाब दें
+
+भारतीय इमरजेंसी नंबर:
+- पुलिस: 100
+- एम्बुलेंस: 108
+- फायर: 101
+- महिला हेल्पलाइन: 1091
+- चाइल्ड हेल्पलाइन: 1098
+- यूनिवर्सल इमरजेंसी: 112
+
+अगर यूजर ने नहीं बताया है तो पहले पूछें कि किस तरह की इमरजेंसी है।`;
+
 /**
  * Send message to Groq and get response
  * @param {Array} conversationHistory - Array of {role, text} objects
@@ -33,6 +59,8 @@ Start by asking what kind of emergency the user is facing if they haven't specif
  */
 export async function sendToGemini(conversationHistory) {
     const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+    const settings = getSettings();
+    const systemPrompt = settings.language === 'hi' ? SYSTEM_PROMPT_HI : SYSTEM_PROMPT_EN;
 
     if (!apiKey || apiKey === 'your_groq_api_key_here') {
         return '⚠️ Groq API key not configured. Please set VITE_GROQ_API_KEY in the .env file.';
@@ -41,7 +69,7 @@ export async function sendToGemini(conversationHistory) {
     try {
         // Build messages array for OpenAI-compatible API
         const messages = [
-            { role: 'system', content: SYSTEM_PROMPT }
+            { role: 'system', content: systemPrompt }
         ];
 
         // Add conversation history

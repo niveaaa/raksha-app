@@ -49,6 +49,7 @@ export function deleteContact(id) {
 const DEFAULT_SETTINGS = {
     geminiApiKey: '',
     shakeToSOS: true,
+    language: 'en',
     emergencyMessage: 'Emergency alert: I may need help. My live location is: {location}',
 };
 

@@ -3,6 +3,13 @@
     padding-bottom: var(--space-lg);
 }
 
+.lang-btn {
+    border-radius: var(--radius-md) !important;
+    font-size: var(--font-sm) !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+}
+
 .settings-sections {
     padding: 0 var(--space-md);
     display: flex;

@@ -15,6 +15,26 @@ export function render() {
       </div>
 
       <div class="settings-sections">
+        <!-- Language -->
+        <div class="settings-section">
+          <div class="settings-section-title">Language / भाषा</div>
+          <div class="setting-item">
+            <div class="setting-icon blue">🌐</div>
+            <div class="setting-info">
+              <h4>AI & Voice Language</h4>
+              <p>Changes AI responses, voice input & TTS</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--space-sm);padding:0 var(--space-md) var(--space-md);">
+            <button class="btn-${settings.language === 'en' ? 'primary' : 'secondary'} lang-btn" data-lang="en" style="flex:1;padding:var(--space-sm);">
+              English
+            </button>
+            <button class="btn-${settings.language === 'hi' ? 'primary' : 'secondary'} lang-btn" data-lang="hi" style="flex:1;padding:var(--space-sm);">
+              हिंदी
+            </button>
+          </div>
+        </div>
+
         <!-- Safety Features -->
         <div class="settings-section">
           <div class="settings-section-title">Safety Features</div>
@@ -94,6 +114,20 @@ export function render() {
 }
 
 export function mount() {
+  // Language toggle
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      updateSetting('language', btn.dataset.lang);
+      showToast(btn.dataset.lang === 'hi' ? 'भाषा: हिंदी ✓' : 'Language: English ✓');
+      // Refresh the screen to update button styles
+      const container = document.getElementById('screen-container');
+      if (container) {
+        container.innerHTML = render();
+        mount();
+      }
+    });
+  });
+
   // Shake toggle
   const shakeToggle = document.getElementById('shake-toggle');
   if (shakeToggle) {

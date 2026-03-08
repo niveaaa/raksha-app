@@ -1,7 +1,7 @@
 // AI Assistant Screen - Chat interface with Gemini Flash
 
 import { sendToGemini } from '../services/gemini.js';
-import { getChatHistory, saveChatHistory, clearChatHistory } from '../services/storage.js';
+import { getChatHistory, saveChatHistory, clearChatHistory, getSettings } from '../services/storage.js';
 
 let chatMessages = [];
 let isProcessing = false;
@@ -10,11 +10,13 @@ let ttsEnabled = true;
 
 export function render() {
     chatMessages = getChatHistory();
+    const settings = getSettings();
+    const isHindi = settings.language === 'hi';
 
     const messagesHTML = chatMessages.length > 0
         ? chatMessages.map(msg => createBubbleHTML(msg)).join('')
         : `<div class="chat-bubble ai">
-        <span>👋 I'm your Emergency AI Assistant. I can help you during emergencies with first-aid guidance, safety instructions, and more.</span>
+        <span>${isHindi ? '👋 मैं आपका इमरजेंसी AI असिस्टेंट हूँ। मैं इमरजेंसी में प्राथमिक चिकित्सा, सुरक्षा निर्देश और बहुत कुछ में मदद कर सकता हूँ।' : '👋 I\'m your Emergency AI Assistant. I can help you during emergencies with first-aid guidance, safety instructions, and more.'}</span>
         <span class="bubble-time">AI Assistant</span>
        </div>`;
 
@@ -47,7 +49,7 @@ export function render() {
         <button class="chat-voice-btn" id="voice-btn" title="Voice Input">
           🎤
         </button>
-        <textarea class="chat-input" id="chat-input" placeholder="Describe your emergency..." rows="1"></textarea>
+        <textarea class="chat-input" id="chat-input" placeholder="${isHindi ? 'अपनी इमरजेंसी बताएं...' : 'Describe your emergency...'}" rows="1"></textarea>
         <button class="chat-send-btn" id="send-btn" title="Send">
           ➤
         </button>
@@ -219,7 +221,8 @@ function toggleVoiceInput() {
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
-            recognition.lang = 'en-IN';
+            const settings = getSettings();
+            recognition.lang = settings.language === 'hi' ? 'hi-IN' : 'en-IN';
             recognition.continuous = false;
             recognition.interimResults = true;
 
@@ -292,12 +295,14 @@ async function speakText(text) {
     if (!cleanText) return;
 
     const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
+    const settings = getSettings();
+    const isHindi = settings.language === 'hi';
 
     if (!apiKey || apiKey === 'your_elevenlabs_api_key_here') {
         // Fallback to browser TTS
         if (window.speechSynthesis) {
             const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.lang = 'en-IN';
+            utterance.lang = isHindi ? 'hi-IN' : 'en-IN';
             utterance.rate = 1.05;
             window.speechSynthesis.speak(utterance);
         }
@@ -306,7 +311,10 @@ async function speakText(text) {
 
     try {
         // ElevenLabs streaming TTS
-        const voiceId = 'JBFqnCBsd6RMkjVDRZzb'; // George - clear, professional
+        // George voice for both — multilingual model for Hindi
+        const voiceId = 'JBFqnCBsd6RMkjVDRZzb'; // George
+        const modelId = isHindi ? 'eleven_multilingual_v2' : 'eleven_turbo_v2';
+        console.log('TTS:', isHindi ? 'Hindi/Manav' : 'English/George', 'model:', modelId);
         const response = await fetch(
             `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`,
             {
@@ -317,7 +325,7 @@ async function speakText(text) {
                 },
                 body: JSON.stringify({
                     text: cleanText,
-                    model_id: 'eleven_turbo_v2',
+                    model_id: modelId,
                     voice_settings: {
                         stability: 0.5,
                         similarity_boost: 0.75,
@@ -328,7 +336,8 @@ async function speakText(text) {
         );
 
         if (!response.ok) {
-            console.warn('ElevenLabs error:', response.status);
+            const errText = await response.text().catch(() => '');
+            console.warn('ElevenLabs error:', response.status, errText);
             return;
         }
 
