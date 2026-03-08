@@ -4,10 +4,10 @@ import { getSettings, updateSetting } from '../services/storage.js';
 import { isShakeSupported } from '../services/shake-detector.js';
 
 export function render() {
-    const settings = getSettings();
-    const shakeSupported = isShakeSupported();
+  const settings = getSettings();
+  const shakeSupported = isShakeSupported();
 
-    return `
+  return `
     <div class="settings-screen">
       <div class="screen-header">
         <h1>Settings</h1>
@@ -15,23 +15,6 @@ export function render() {
       </div>
 
       <div class="settings-sections">
-        <!-- AI Configuration -->
-        <div class="settings-section">
-          <div class="settings-section-title">AI Assistant</div>
-          <div class="setting-item">
-            <div class="setting-icon purple">🤖</div>
-            <div class="setting-info">
-              <h4>Gemini API Key</h4>
-              <p>Required for AI emergency assistant</p>
-            </div>
-          </div>
-          <div class="api-key-input-group">
-            <input type="password" class="form-input" id="gemini-api-key" 
-              placeholder="Paste your Gemini API key here"
-              value="${settings.geminiApiKey || ''}" />
-          </div>
-        </div>
-
         <!-- Safety Features -->
         <div class="settings-section">
           <div class="settings-section-title">Safety Features</div>
@@ -111,50 +94,37 @@ export function render() {
 }
 
 export function mount() {
-    // API Key input
-    const apiKeyInput = document.getElementById('gemini-api-key');
-    if (apiKeyInput) {
-        let debounceTimer;
-        apiKeyInput.addEventListener('input', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                updateSetting('geminiApiKey', apiKeyInput.value.trim());
-                showToast('API key saved ✓');
-            }, 800);
-        });
-    }
+  // Shake toggle
+  const shakeToggle = document.getElementById('shake-toggle');
+  if (shakeToggle) {
+    shakeToggle.addEventListener('change', () => {
+      updateSetting('shakeToSOS', shakeToggle.checked);
+      showToast(shakeToggle.checked ? 'Shake to SOS enabled' : 'Shake to SOS disabled');
+    });
+  }
 
-    // Shake toggle
-    const shakeToggle = document.getElementById('shake-toggle');
-    if (shakeToggle) {
-        shakeToggle.addEventListener('change', () => {
-            updateSetting('shakeToSOS', shakeToggle.checked);
-            showToast(shakeToggle.checked ? 'Shake to SOS enabled' : 'Shake to SOS disabled');
-        });
-    }
-
-    // Emergency message
-    const messageArea = document.getElementById('emergency-message');
-    if (messageArea) {
-        let debounceTimer;
-        messageArea.addEventListener('input', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                updateSetting('emergencyMessage', messageArea.value.trim());
-                showToast('Message template saved ✓');
-            }, 800);
-        });
-    }
+  // Emergency message
+  const messageArea = document.getElementById('emergency-message');
+  if (messageArea) {
+    let debounceTimer;
+    messageArea.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        updateSetting('emergencyMessage', messageArea.value.trim());
+        showToast('Message template saved ✓');
+      }, 800);
+    });
+  }
 }
 
 function showToast(msg) {
-    const existing = document.querySelector('.toast');
-    if (existing) existing.remove();
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
 }
 
 export function unmount() { }

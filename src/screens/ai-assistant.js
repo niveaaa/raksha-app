@@ -6,6 +6,7 @@ import { getChatHistory, saveChatHistory, clearChatHistory } from '../services/s
 let chatMessages = [];
 let isProcessing = false;
 let recognition = null;
+let ttsEnabled = true;
 
 export function render() {
     chatMessages = getChatHistory();
@@ -23,8 +24,9 @@ export function render() {
         <div class="ai-avatar">🤖</div>
         <div class="ai-header-info">
           <h2>Emergency AI Assistant</h2>
-          <p>● Online • Powered by Gemini</p>
+          <p>● Online • Powered by Groq</p>
         </div>
+        <button class="chat-voice-btn" id="tts-toggle" title="Toggle voice output" style="margin-left:auto;font-size:1.1rem;">${ttsEnabled ? '🔊' : '🔇'}</button>
         <button class="ai-clear-btn" id="ai-clear-btn">Clear Chat</button>
       </div>
 
@@ -109,6 +111,15 @@ export function mount() {
     // Voice input
     voiceBtn?.addEventListener('click', toggleVoiceInput);
 
+    // TTS toggle
+    document.getElementById('tts-toggle')?.addEventListener('click', () => {
+        ttsEnabled = !ttsEnabled;
+        const btn = document.getElementById('tts-toggle');
+        if (btn) btn.textContent = ttsEnabled ? '🔊' : '🔇';
+        if (!ttsEnabled) stopSpeaking();
+        showToast(ttsEnabled ? 'Voice output ON' : 'Voice output OFF');
+    });
+
     // Clear chat
     clearBtn?.addEventListener('click', () => {
         chatMessages = [];
@@ -165,6 +176,9 @@ async function sendMessage() {
     chatMessages.push(aiMsg);
     messagesContainer.insertAdjacentHTML('beforeend', createBubbleHTML(aiMsg));
 
+    // Speak the AI response
+    speakText(aiResponse);
+
     // Save to localStorage
     saveChatHistory(chatMessages);
 
@@ -186,7 +200,7 @@ function toggleVoiceInput() {
     const chatInput = document.getElementById('chat-input');
 
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        showToast('Voice input not supported in this browser');
+        showToast('Voice input not supported — use Chrome browser');
         return;
     }
 
@@ -197,37 +211,54 @@ function toggleVoiceInput() {
         return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = 'en-IN';
-    recognition.continuous = false;
-    recognition.interimResults = true;
+    // Request microphone permission first
+    navigator.mediaDevices?.getUserMedia({ audio: true })
+        .then((stream) => {
+            // Stop the stream immediately, we just needed permission
+            stream.getTracks().forEach(t => t.stop());
 
-    voiceBtn?.classList.add('recording');
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-IN';
+            recognition.continuous = false;
+            recognition.interimResults = true;
 
-    recognition.onresult = (event) => {
-        let transcript = '';
-        for (let i = 0; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-        }
-        if (chatInput) chatInput.value = transcript;
-    };
+            voiceBtn?.classList.add('recording');
+            showToast('🎤 Listening... speak now');
 
-    recognition.onend = () => {
-        voiceBtn?.classList.remove('recording');
-        recognition = null;
-        // Auto-send if we got text
-        if (chatInput?.value.trim()) {
-            sendMessage();
-        }
-    };
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = 0; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                if (chatInput) chatInput.value = transcript;
+            };
 
-    recognition.onerror = () => {
-        voiceBtn?.classList.remove('recording');
-        recognition = null;
-    };
+            recognition.onend = () => {
+                voiceBtn?.classList.remove('recording');
+                recognition = null;
+                if (chatInput?.value.trim()) {
+                    sendMessage();
+                }
+            };
 
-    recognition.start();
+            recognition.onerror = (event) => {
+                voiceBtn?.classList.remove('recording');
+                recognition = null;
+                if (event.error === 'no-speech') {
+                    showToast('No speech detected — try again');
+                } else if (event.error === 'not-allowed') {
+                    showToast('Microphone access denied');
+                } else {
+                    showToast(`Voice error: ${event.error}`);
+                }
+            };
+
+            recognition.start();
+        })
+        .catch(() => {
+            showToast('Microphone access denied — check browser permissions');
+        });
 }
 
 function showToast(msg) {
@@ -240,9 +271,94 @@ function showToast(msg) {
     setTimeout(() => toast.remove(), 3000);
 }
 
+let currentAudio = null;
+
+async function speakText(text) {
+    if (!ttsEnabled) return;
+
+    // Stop any ongoing speech
+    stopSpeaking();
+
+    // Strip markdown/emojis for cleaner speech
+    const cleanText = text
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/\*(.*?)\*/g, '$1')
+        .replace(/`(.*?)`/g, '$1')
+        .replace(/⚠️|🚨|📞|🏥|🚓|🚑|🔥|👩|👶|👴|🚆|🌪|✅|❌|💊|🩹|❤️|🛡️|⚡|🎤|👋|🤖|🆘/g, '')
+        .replace(/\[.*?\]\(.*?\)/g, '')
+        .replace(/#/g, '')
+        .trim();
+
+    if (!cleanText) return;
+
+    const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
+
+    if (!apiKey || apiKey === 'your_elevenlabs_api_key_here') {
+        // Fallback to browser TTS
+        if (window.speechSynthesis) {
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'en-IN';
+            utterance.rate = 1.05;
+            window.speechSynthesis.speak(utterance);
+        }
+        return;
+    }
+
+    try {
+        // ElevenLabs streaming TTS
+        const voiceId = 'JBFqnCBsd6RMkjVDRZzb'; // George - clear, professional
+        const response = await fetch(
+            `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'xi-api-key': apiKey,
+                },
+                body: JSON.stringify({
+                    text: cleanText,
+                    model_id: 'eleven_turbo_v2',
+                    voice_settings: {
+                        stability: 0.5,
+                        similarity_boost: 0.75,
+                        speed: 1.1,
+                    },
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            console.warn('ElevenLabs error:', response.status);
+            return;
+        }
+
+        // Stream audio
+        const blob = await response.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        currentAudio = new Audio(audioUrl);
+        currentAudio.playbackRate = 1.0;
+        currentAudio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            currentAudio = null;
+        };
+        currentAudio.play();
+    } catch (err) {
+        console.warn('TTS error:', err);
+    }
+}
+
+function stopSpeaking() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+    }
+    window.speechSynthesis?.cancel();
+}
+
 export function unmount() {
     if (recognition) {
         recognition.stop();
         recognition = null;
     }
+    stopSpeaking();
 }

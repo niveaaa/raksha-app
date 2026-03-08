@@ -1,8 +1,6 @@
-// Gemini Flash AI Service
+// Groq AI Service (OpenAI-compatible API)
 
-import { getSettings } from './storage.js';
-
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 const SYSTEM_PROMPT = `You are an Emergency AI Assistant built into an SOS safety app used in India. Your role is to help users during emergency situations. 
 
@@ -29,56 +27,43 @@ Indian Emergency Numbers you can reference:
 Start by asking what kind of emergency the user is facing if they haven't specified.`;
 
 /**
- * Send message to Gemini Flash and get response
+ * Send message to Groq and get response
  * @param {Array} conversationHistory - Array of {role, text} objects
  * @returns {Promise<string>}
  */
 export async function sendToGemini(conversationHistory) {
-    const settings = getSettings();
-    const apiKey = settings.geminiApiKey;
+    const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
-    if (!apiKey) {
-        return '⚠️ Gemini API key not set. Please go to **Settings** and add your API key to use the AI assistant.\n\nYou can get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).';
+    if (!apiKey || apiKey === 'your_groq_api_key_here') {
+        return '⚠️ Groq API key not configured. Please set VITE_GROQ_API_KEY in the .env file.';
     }
 
     try {
-        // Build contents array for Gemini API
-        const contents = [];
-
-        // Add system instruction as first user message context
-        contents.push({
-            role: 'user',
-            parts: [{ text: SYSTEM_PROMPT + '\n\nThe user has activated the emergency assistant. Begin the conversation.' }]
-        });
-        contents.push({
-            role: 'model',
-            parts: [{ text: 'I understand. I\'m ready to help. What emergency are you facing right now? Please tell me briefly what\'s happening so I can assist you.' }]
-        });
+        // Build messages array for OpenAI-compatible API
+        const messages = [
+            { role: 'system', content: SYSTEM_PROMPT }
+        ];
 
         // Add conversation history
         for (const msg of conversationHistory) {
-            contents.push({
-                role: msg.role === 'user' ? 'user' : 'model',
-                parts: [{ text: msg.text }]
+            messages.push({
+                role: msg.role === 'user' ? 'user' : 'assistant',
+                content: msg.text
             });
         }
 
-        const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+        const response = await fetch(GROQ_API_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
             body: JSON.stringify({
-                contents,
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 512,
-                    topP: 0.9,
-                },
-                safetySettings: [
-                    { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
-                    { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
-                    { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
-                    { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
-                ]
+                model: 'llama-3.3-70b-versatile',
+                messages,
+                temperature: 0.7,
+                max_tokens: 512,
+                top_p: 0.9,
             })
         });
 
@@ -88,7 +73,7 @@ export async function sendToGemini(conversationHistory) {
         }
 
         const data = await response.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const text = data.choices?.[0]?.message?.content;
 
         if (!text) {
             throw new Error('No response from AI');
@@ -96,9 +81,9 @@ export async function sendToGemini(conversationHistory) {
 
         return text;
     } catch (err) {
-        console.error('Gemini API error:', err);
-        if (err.message.includes('API key')) {
-            return '⚠️ Invalid API key. Please check your Gemini API key in Settings.';
+        console.error('Groq API error:', err);
+        if (err.message.includes('API key') || err.message.includes('auth')) {
+            return '⚠️ Invalid API key. Please check your Groq API key in Settings.';
         }
         return `⚠️ AI is temporarily unavailable. Error: ${err.message}\n\nIn the meantime, call **112** for immediate emergency help.`;
     }
