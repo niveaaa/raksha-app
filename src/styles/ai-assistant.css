@@ -9,7 +9,7 @@
 .ai-header {
     padding: var(--space-lg);
     border-bottom: 1px solid var(--border-color);
-    background: rgba(10, 10, 15, 0.85);
+    background: var(--bg-primary);
     backdrop-filter: blur(16px);
     display: flex;
     align-items: center;
