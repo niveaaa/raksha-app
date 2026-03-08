@@ -2,6 +2,12 @@
 
 A Progressive Web App for emergency situations in India. Features an SOS radial dashboard, AI-powered emergency assistant, nearby help map, and emergency contact alerts.
 
+## Links
+
+- [Pitch Video](https://drive.google.com/file/d/180egKlZOUfEhjkh_Zdt1TaXjJ47UPn8R/view?usp=sharing)
+- [Demo Video](https://drive.google.com/file/d/15QNgy5mF_Kbo1cCMKWxhb9IKNbQ-3bK_/view?usp=sharing)
+- [Presentation](https://drive.google.com/file/d/1QKVGD-2xkQt-Z_kV0SYK4vciuil-vczT/view?usp=sharing)
+
 ## Features
 
 - SOS Radial Dashboard
