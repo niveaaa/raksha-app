@@ -1,17 +1,17 @@
-# 🆘 Raksha - SOS Emergency PWA
+# Raksha - SOS Emergency PWA
 
 A Progressive Web App for emergency situations in India. Features an SOS radial dashboard, AI-powered emergency assistant, nearby help map, and emergency contact alerts.
 
 ## Features
 
-- **SOS Radial Dashboard** — 8 emergency buttons (Police, Medical, Fire, Women Safety, Child, Elderly, Railway, Disaster) with direct call & SMS
-- **AI Emergency Assistant** — Powered by Groq (Llama 3.3 70B) with voice input & text-to-speech
-- **Nearby Help Map** — Find hospitals, police stations, pharmacies & fire stations using Leaflet + OpenStreetMap
-- **Emergency Contacts** — Add trusted contacts who receive SMS alerts with your GPS location
-- **Shake to SOS** — Shake your phone 3 times to trigger emergency alerts
-- **Hindi Support** — Full Hindi/English toggle for AI responses, voice input & TTS
-- **Dark/Light Mode** — Theme toggle with matching map tiles
-- **Offline Ready** — PWA with service worker caching
+- SOS Radial Dashboard
+- AI Emergency Assistant
+- Nearby Help Map
+- Emergency Contacts
+- Shake to SOS
+- Hindi Support
+- Dark/Light Mode
+- Offline Ready
 
 ## Tech Stack
 
